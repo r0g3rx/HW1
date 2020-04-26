@@ -55,7 +55,8 @@ cv2.destroyAllWindows()
 
 
 
-#%% Q6: sigma * np.random.randn(...)
+#%% Q6: sigma * N(0,1)+ mu
+
 
 def random_noise2(shape = [300,400],std=1):
     def noise(shape = shape,std=std):
@@ -82,7 +83,9 @@ cv2.imwrite('I_10.jpg',I_10)
 cv2.imwrite('I_20.jpg',I_20)
 
 
-#%% Q8: Filtering Low pass
+#%% Q8: Filtering with Low pass filter. Additive gaussian noise includes all the frequencies in spectrum.
+# Most of the information in images  are in lower frequencies so we can remove the higher frequencies with low pass filter.
+# We might lose some edge information though.
 def f(img):
     Gaussian = np.asarray([[1, 2, 1],[2, 4, 2], [1, 2, 1]])/16
     lowpass3 = np.ones([3,3])/9
@@ -112,8 +115,11 @@ cv2.imwrite('I_20L3.jpg',I_20L3)
 cv2.imwrite('I_20L5.jpg',I_20L5)
 
 
+#%% Filtering High pass. We can detect edges from images with high pass filtering.
+## High boost filter: It is often desirable to emphasize high frequency components
+# representing the image details (such as sharpening) without eliminating 
+# low frequency components. High boost filter can be used in this situation.
 
-#%% Filtering High pass
 
 def fh(img,A=2):
     h1 = np.asarray([[-1, -1, -1],[-1, 8, -1], [-1, -1, -1]])/9
@@ -149,8 +155,8 @@ cv2.imshow('img',I_1hb.astype(np.uint8))
 cv2.waitKey()
 cv2.destroyAllWindows()
 
-#%% Salt and Pepper noise
-
+#%% Q10: The noise is Salt and Pepper noise. We can eliminate it with median
+#filtering which is a nonlinear filter.
 img_sp = random_noise(img, mode='s&p',amount=0.01)*255
 cv2.imwrite('img_sp.jpg',img_sp)
 median = cv2.medianBlur(img_sp.astype(np.uint8),3)
